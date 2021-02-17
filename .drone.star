@@ -959,13 +959,14 @@ def acceptance(ctx):
 				if (testConfig['cron'] != ''):
 					result['trigger']['cron'] = testConfig['cron']
 				else:
-					if ((testConfig['pullRequestAndCron'] != '') and (ctx.build.event != 'pull_request')):
-						result['trigger']['cron'] = testConfig['pullRequestAndCron']
-					else:
-						result['trigger']['ref'] = [
+					result['trigger'] = {
+						'ref': [
 							'refs/pull/**',
 							'refs/tags/**'
 						]
+					}
+					for branch in config['branches']:
+						result['trigger']['ref'].append('refs/heads/%s' % branch)
 
 				pipelines.append(result)
 
